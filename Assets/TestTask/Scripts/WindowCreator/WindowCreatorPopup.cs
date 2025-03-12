@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BonusCreator : WindowCreator
+public class WindowCreatorPopup : WindowCreatorBase
 {    
-    [SerializeField] private Transform _initPositionTransform;    
+    [SerializeField] private Transform _slotTransform;    
     [SerializeField] protected Window[] _bonusWindowPrefabs;
     private Queue<Window> _queueWindowPrefabs = new Queue<Window>();
     private Window _activeWindow;
@@ -21,14 +21,17 @@ public class BonusCreator : WindowCreator
 
     public override void PressClose()
     {
-        base.PressClose();
-        Remove();
+        _activeWindow.Hide();
+
+        if (_queueWindowPrefabs.Count > 0)
+        {
+            Show(_queueWindowPrefabs.Dequeue());
+        }
     }
 
     private IEnumerator Waitinterval(float time)
     {
-        yield return new WaitForSeconds(time);
-        
+        yield return new WaitForSeconds(time);        
         
         if (_id < _bonusWindowPrefabs.Length)
         {
@@ -59,20 +62,10 @@ public class BonusCreator : WindowCreator
 
     public void Show(Window windowPrefab)
     {
-        Vector3 position = _initPositionTransform.position;
-        Quaternion rotation = _initPositionTransform.rotation;
-        Transform parent = _initPositionTransform;
+        Vector3 position = _slotTransform.position;
+        Quaternion rotation = _slotTransform.rotation;
+        Transform parent = _slotTransform;
         _activeWindow = Instantiate(windowPrefab, position, rotation, parent);
         _activeWindow.Init(this);        
-    }
-
-    public void Remove()
-    {
-        _activeWindow.Hide();        
-
-        if (_queueWindowPrefabs.Count > 0)
-        {
-            Show(_queueWindowPrefabs.Dequeue());
-        }
-    }
+    }    
 }

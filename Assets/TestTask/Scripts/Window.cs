@@ -1,3 +1,5 @@
+using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,7 +8,8 @@ public class Window: MonoBehaviour
     [SerializeField] private WindowTag _tag;    
     [SerializeField] private Button _takeButton;
     
-    private WindowCreator _windowCreator;
+    private WindowCreatorBase _windowCreator;
+    private float _duration = 0.25f;
 
     public WindowTag Tag => _tag;
 
@@ -22,15 +25,26 @@ public class Window: MonoBehaviour
         _takeButton.onClick.RemoveAllListeners();
     }
 
-    public void Init(WindowCreator windowCreator)
+    public void Init(WindowCreatorBase windowCreator)
     {
         _windowCreator = windowCreator;
+        transform.localScale = new Vector3(1, 0, 1);
+        StartCoroutine(Show(_duration));
+    }
+
+    private IEnumerator Show(float duration)
+    {
+        yield return new WaitForSeconds(duration);         
+        transform.DOScaleY(1, _duration);
     }
 
     public void Hide()
     {
         IsHidden = true;
-        Destroy(gameObject);
+        transform.DOScaleY(0, _duration).OnComplete
+        (
+            () => Destroy(gameObject)
+        );        
     }
 
     private void PressClose()

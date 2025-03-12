@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TagWindowCreator : WindowCreator
+public class WindowCreatorNormal : WindowCreatorBase
 {
-    [SerializeField] private Transform _initPositionFirstTransform;
-    [SerializeField] private Transform _initPositionSecondTransform;
-
+    [SerializeField] private Transform _slotFirstTransform;
+    [SerializeField] private Transform _slotSecondTransform;
     [SerializeField] private Window[] _windowPrefabsSettings;
     [SerializeField] private Window[] _windowPrefabsFriends;
     [SerializeField] private Window[] _windowPrefabsInvites;
+
     private Window _activeWindowFirst;
     private Window _activeWindowSecond;
     private Queue<Window> _queueWindowPrefabs = new Queue<Window>();
@@ -42,12 +42,8 @@ public class TagWindowCreator : WindowCreator
 
     public override void PressClose()
     {
-        base.PressClose();        
         if (_queueWindowPrefabs.Count > 0)
         {
-            Debug.Log("_activeWindowFirst.IsHidden: " + _activeWindowFirst.IsHidden);
-            Debug.Log("IsFree(0): " + IsFree(0));
-
             if (IsFree(0) || IsFree(1))
                 TryShow(_queueWindowPrefabs.Dequeue());
         }
@@ -126,7 +122,7 @@ public class TagWindowCreator : WindowCreator
 
     public void ShowWindow(Window windowPrefab, int positionId)
     {
-        Transform _initPositionTransform = positionId == 0 ? _initPositionFirstTransform : _initPositionSecondTransform;
+        Transform _initPositionTransform = positionId == 0 ? _slotFirstTransform : _slotSecondTransform;
 
         Vector3 position = _initPositionTransform.position;//TODO!
         Quaternion rotation = _initPositionTransform.rotation;

@@ -6,19 +6,27 @@ public class CanvasMove : MonoBehaviour
 {
     [SerializeField] private Transform _gazeInteractorTransform;    
     [SerializeField] private Transform _canvasTransform;
+    private Vector3 _previousPosition;
     private const float _interval = 3;
     private const float _moveDuration = 0.25f;
+    private const float _moveDistance = 1;
 
     private void Start()
-    {
+    {        
+        _previousPosition = _gazeInteractorTransform.position;
         StartCoroutine(WaitInterval(_interval));
     }
 
     private IEnumerator WaitInterval(float time)
     {
         yield return new WaitForSeconds(time);
-        Rotate();
-        Move();
+        float distance = Vector3.Distance(_gazeInteractorTransform.position, _previousPosition);
+        if (distance > _moveDistance)
+        {
+            _previousPosition = _canvasTransform.position;
+            Rotate();
+            Move();
+        }
         StartCoroutine(WaitInterval(_interval));        
     }
 

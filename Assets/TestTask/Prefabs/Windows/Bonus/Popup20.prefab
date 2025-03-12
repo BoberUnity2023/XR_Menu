@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4784868548013178562}
   - component: {fileID: 2348612665628426194}
   m_Layer: 5
-  m_Name: Popup15
+  m_Name: Popup20
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a73d2e0d1e4a0af4eac5c3872e431b3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _tag: 0
   _takeButton: {fileID: 5487552389575950396}
 --- !u!1 &5790471585921252504
 GameObject:
@@ -231,7 +232,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u0411\u043E\u043D\u0443\u0441 \u0437\u0430 15 \u0441\u0435\u043A"
+  m_Text: "\u0411\u043E\u043D\u0443\u0441 \u0437\u0430 20 \u0441\u0435\u043A"
 --- !u!1001 &378654702588129154
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -266,7 +267,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5289182684458692540, guid: e5db301629853dd4a99835fa70099d79, type: 3}
       propertyPath: m_Name
-      value: TextButton
+      value: ButtonClose
       objectReference: {fileID: 0}
     - target: {fileID: 5289182684458692541, guid: e5db301629853dd4a99835fa70099d79, type: 3}
       propertyPath: m_Pivot.x
@@ -354,7 +355,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5289182684458692542, guid: e5db301629853dd4a99835fa70099d79, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5289182684458692542, guid: e5db301629853dd4a99835fa70099d79, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
