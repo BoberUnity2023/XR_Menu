@@ -9,7 +9,7 @@ public class Window: MonoBehaviour
     [SerializeField] private Button _takeButton;
     
     private WindowCreatorBase _windowCreator;
-    private float _duration = 0.25f;
+    private const float _duration = 0.25f;
 
     public WindowTag Tag => _tag;
 
@@ -30,21 +30,22 @@ public class Window: MonoBehaviour
         _windowCreator = windowCreator;
         transform.localScale = new Vector3(1, 0, 1);
         StartCoroutine(Show(_duration));
-    }
-
-    private IEnumerator Show(float duration)
-    {
-        yield return new WaitForSeconds(duration);         
-        transform.DOScaleY(1, _duration);
-    }
+    }    
 
     public void Hide()
     {
         IsHidden = true;
-        transform.DOScaleY(0, _duration).OnComplete
+        Tween tween = transform.DOScaleY(0, _duration);
+        tween.OnComplete
         (
             () => Destroy(gameObject)
         );        
+    }
+
+    private IEnumerator Show(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        transform.DOScaleY(1, _duration);
     }
 
     private void PressClose()

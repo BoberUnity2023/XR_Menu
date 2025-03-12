@@ -1,5 +1,6 @@
 using DG.Tweening;
-using System.Collections;
+using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class CanvasMove : MonoBehaviour
@@ -9,22 +10,17 @@ public class CanvasMove : MonoBehaviour
     private Vector3 _previousPosition;
     private const float _interval = 3;
     private const float _moveDuration = 0.25f;
-    private const float _moveDistance = 1;
-
-    private void Start()
-    {
-        Init();
-    }
+    private const float _moveDistance = 1;    
 
     public void Init()
     {
-        _previousPosition = _gazeInteractorTransform.position;
-        StartCoroutine(WaitInterval(_interval));
+        _previousPosition = _gazeInteractorTransform.position;        
+        WaitIntervalAsync(_interval);
     }
 
-    private IEnumerator WaitInterval(float time)
+    private async void WaitIntervalAsync(float time)
     {
-        yield return new WaitForSeconds(time);
+        await Task.Delay(TimeSpan.FromSeconds(time));
         float distance = Vector3.Distance(_gazeInteractorTransform.position, _previousPosition);
         if (distance > _moveDistance)
         {
@@ -32,7 +28,7 @@ public class CanvasMove : MonoBehaviour
             Rotate();
             Move();
         }
-        StartCoroutine(WaitInterval(_interval));        
+        WaitIntervalAsync(_interval);
     }
 
     private void Move()
@@ -53,7 +49,7 @@ public class CanvasMove : MonoBehaviour
         _canvasTransform.rotation = Quaternion.Euler(0f, rotY, 0f);
     }
 
-    Vector3 TargetPosition
+    private Vector3 TargetPosition
     {
         get
         {

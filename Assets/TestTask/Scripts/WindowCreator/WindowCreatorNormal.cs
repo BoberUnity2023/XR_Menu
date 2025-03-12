@@ -19,6 +19,14 @@ public class WindowCreatorNormal : WindowCreatorBase
         _slotSecond = new Slot(_slotSecondTransform);
     }
 
+    public void PressShowWindow(string id)//from Editor
+    {
+        Window[] windowPrefabs = GetWindowPrefabsById(id);
+        string key = id.Substring(1, 1);//TODO: Add values more than 9
+        Window windowPrefab = GetWindowPrefabByKey(key, windowPrefabs);
+        ShowOrEnqueue(windowPrefab);
+    }
+
     public override void PressClose()
     {
         if (_queueWindowPrefabs.Count > 0)
@@ -55,14 +63,6 @@ public class WindowCreatorNormal : WindowCreatorBase
             }
         }
     }
-
-    public void PressShowWindow(string id)//from Editor
-    {
-        Window[] windowPrefabs = GetWindowPrefabsById(id);
-        string key = id.Substring(1, 1);//TODO: Add values more than 9
-        Window windowPrefab = GetWindowPrefabByKey(key, windowPrefabs);
-        ShowOrEnqueue(windowPrefab);
-    }  
 
     private Window[] GetWindowPrefabsById(string id)
     { 
