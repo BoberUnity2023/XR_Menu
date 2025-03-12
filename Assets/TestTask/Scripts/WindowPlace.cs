@@ -12,7 +12,7 @@ public class WindowPlace : MonoBehaviour
 
     public WindowTag Tag { get; private set; }
 
-    public void Show(Window windowPrefab)
+    public void ShowWindow(Window windowPrefab)
     {
         Vector3 position = _initPositionTransform.position;
         Quaternion rotation = _initPositionTransform.rotation;

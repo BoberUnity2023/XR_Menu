@@ -5,12 +5,12 @@ public class Window: MonoBehaviour
 {
     [SerializeField] private WindowTag _tag;    
     [SerializeField] private Button _takeButton;
-
-    private QueueWindows _queueWindows;
-    private TagWindowCreator _tagWindowCreator;
-    private WindowPlace _windowPlace;
+    
+    private WindowCreator _windowCreator;
 
     public WindowTag Tag => _tag;
+
+    public bool IsHidden { get; private set; }
 
     private void Start()
     {
@@ -22,24 +22,20 @@ public class Window: MonoBehaviour
         _takeButton.onClick.RemoveAllListeners();
     }
 
-    public void Init(QueueWindows queueWindows, TagWindowCreator tagWindowCreator = null, WindowPlace windowPlace = null)
+    public void Init(WindowCreator windowCreator)
     {
-        _queueWindows = queueWindows;
-        _tagWindowCreator = tagWindowCreator;
+        _windowCreator = windowCreator;
     }
 
     public void Hide()
     {
+        IsHidden = true;
         Destroy(gameObject);
     }
 
     private void PressClose()
     {
-        _queueWindows.Remove();
         Hide();
-        if (_tagWindowCreator != null)
-        {
-            _tagWindowCreator.PressTake(_queueWindows);
-        }
+        _windowCreator.PressClose();
     }
 }

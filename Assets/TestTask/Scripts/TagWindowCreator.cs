@@ -1,14 +1,87 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TagWindowCreator : MonoBehaviour
+public class TagWindowCreator : WindowCreator
 {
-    [SerializeField] private QueueWindows _queueFirst;
-    [SerializeField] private QueueWindows _queueSecond;
+    [SerializeField] private Transform _initPositionFirstTransform;
+    [SerializeField] private Transform _initPositionSecondTransform;
+
     [SerializeField] private Window[] _windowPrefabsSettings;
     [SerializeField] private Window[] _windowPrefabsFriends;
     [SerializeField] private Window[] _windowPrefabsInvites;
-    [SerializeField] private Queue<Window> _queueWindowPrefabs = new Queue<Window>();
+    private Window _activeWindowFirst;
+    private Window _activeWindowSecond;
+    private Queue<Window> _queueWindowPrefabs = new Queue<Window>();
+
+    public bool IsFree(int id)
+    {
+        if (id == 0)
+        { 
+            if (_activeWindowFirst == null)
+                return true;
+
+            if (_activeWindowFirst.IsHidden)
+                return true;
+
+            return false;
+        }
+
+        if (id == 1)
+        {
+            if (_activeWindowSecond == null)
+                return true;
+
+            if (_activeWindowSecond.IsHidden)
+                return true;
+
+            return false;
+        }
+
+        return false;
+    }
+
+    public override void PressClose()
+    {
+        base.PressClose();        
+        if (_queueWindowPrefabs.Count > 0)
+        {
+            Debug.Log("_activeWindowFirst.IsHidden: " + _activeWindowFirst.IsHidden);
+            Debug.Log("IsFree(0): " + IsFree(0));
+
+            if (IsFree(0) || IsFree(1))
+                TryShow(_queueWindowPrefabs.Dequeue());
+        }
+    }
+
+    public bool TryShow(Window windowPrefab)
+    {
+        if (IsFree(0) || windowPrefab.Tag == _activeWindowFirst.Tag)
+        {            
+            if (!IsFree(0))
+            {
+                _activeWindowFirst.Hide(); 
+            }
+            ShowWindow(windowPrefab, 0);
+
+            return true;
+        }
+        else
+        {
+            if (IsFree(1) || windowPrefab.Tag == _activeWindowSecond.Tag)
+            {                
+                if (!IsFree(1))
+                {
+                    _activeWindowSecond.Hide();
+                }
+                ShowWindow(windowPrefab, 1);
+
+                return true;
+            }
+            Debug.Log("Окно " + windowPrefab.name + " добавлено в очередь");
+            _queueWindowPrefabs.Enqueue(windowPrefab);
+            return false;
+        }
+    }
 
     public void PressShowWindow(string id)
     {
@@ -31,63 +104,42 @@ public class TagWindowCreator : MonoBehaviour
 
         if (id.Substring(1, 1) == "0")
         {
-            AddWindow(windowPrefabs[0]);
+            TryShow(windowPrefabs[0]);
         }
 
         if (id.Substring(1, 1) == "1")
         {
-            AddWindow(windowPrefabs[1]);
+            TryShow(windowPrefabs[1]);
         }
 
         if (id.Substring(1, 1) == "2")
         {
-            AddWindow(windowPrefabs[2]);
+            TryShow(windowPrefabs[2]);
         }
 
         if (id.Substring(1, 1) == "3")
         {
-            AddWindow(windowPrefabs[3]);
+            TryShow(windowPrefabs[3]);
         }
-    }
+    } 
+    
 
-    public void PressTake(QueueWindows queueWindows)
+    public void ShowWindow(Window windowPrefab, int positionId)
     {
-        queueWindows.Remove();
-        if (_queueWindowPrefabs.Count > 0)
-        {
-            Window window = _queueWindowPrefabs.Dequeue();
-            queueWindows.TryShow(window);
-        }
-    }
+        Transform _initPositionTransform = positionId == 0 ? _initPositionFirstTransform : _initPositionSecondTransform;
 
-    public void AddWindow(Window window)
-    {
-        bool success = TryAddWindow(window, _queueFirst);
-        if (!success)
+        Vector3 position = _initPositionTransform.position;//TODO!
+        Quaternion rotation = _initPositionTransform.rotation;
+        Transform parent = _initPositionTransform;
+        if (positionId == 0)
         {
-            success = TryAddWindow(window, _queueSecond);
-            if (!success)
-                _queueWindowPrefabs.Enqueue(window);
+            _activeWindowFirst = Instantiate(windowPrefab, position, rotation, parent);
+            _activeWindowFirst.Init(this);
         }
-    }
-
-    private bool TryAddWindow(Window window, QueueWindows queueWindows)
-    {
-        if (queueWindows.IsFree)
+        if (positionId == 1)
         {
-            queueWindows.TryShow(window);
-            return true;
-        }
-        else
-        {
-            if (queueWindows.Tag == window.Tag)
-            {
-                queueWindows.HideActiveWindow();
-                queueWindows.Show(window);
-                return true;
-            } 
-
-            return false;   
+            _activeWindowSecond = Instantiate(windowPrefab, position, rotation, parent);
+            _activeWindowSecond.Init(this);
         }
     }
 }
