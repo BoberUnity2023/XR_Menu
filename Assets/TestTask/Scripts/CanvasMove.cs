@@ -21,8 +21,8 @@ namespace XR_Menu
         private async void WaitIntervalAsync(float time)
         {
             await Task.Delay(TimeSpan.FromSeconds(time));
-            float distance = Vector3.Distance(_gazeInteractorTransform.position, _previousPosition);
-            if (distance > _data.MoveDistance)
+            
+            if (DistanceToCanvas > _data.MoveDistance)
             {
                 _previousPosition = _canvasTransform.position;
                 Rotate();
@@ -54,6 +54,14 @@ namespace XR_Menu
             get
             {
                 return _gazeInteractorTransform.position + _gazeInteractorTransform.forward;
+            }
+        }
+
+        private float DistanceToCanvas
+        {
+            get
+            {
+                return Vector3.Distance(_gazeInteractorTransform.position, _previousPosition);
             }
         }
     }
