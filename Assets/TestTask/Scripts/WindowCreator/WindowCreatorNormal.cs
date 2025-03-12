@@ -8,134 +8,106 @@ public class WindowCreatorNormal : WindowCreatorBase
     [SerializeField] private Window[] _windowPrefabsSettings;
     [SerializeField] private Window[] _windowPrefabsFriends;
     [SerializeField] private Window[] _windowPrefabsInvites;
-
-    private Window _activeWindowFirst;
-    private Window _activeWindowSecond;
+    
     private Queue<Window> _queueWindowPrefabs = new Queue<Window>();
+    private Slot _slotFirst;
+    private Slot _slotSecond;    
 
-    public bool IsFree(int id)
+    public void Init()
     {
-        if (id == 0)
-        { 
-            if (_activeWindowFirst == null)
-                return true;
-
-            if (_activeWindowFirst.IsHidden)
-                return true;
-
-            return false;
-        }
-
-        if (id == 1)
-        {
-            if (_activeWindowSecond == null)
-                return true;
-
-            if (_activeWindowSecond.IsHidden)
-                return true;
-
-            return false;
-        }
-
-        return false;
+        _slotFirst = new Slot(_slotFirstTransform);
+        _slotSecond = new Slot(_slotSecondTransform);
     }
 
     public override void PressClose()
     {
         if (_queueWindowPrefabs.Count > 0)
         {
-            if (IsFree(0) || IsFree(1))
-                TryShow(_queueWindowPrefabs.Dequeue());
+            if (_slotFirst.IsFree || _slotSecond.IsFree)
+                ShowOrEnqueue(_queueWindowPrefabs.Dequeue());
         }
     }
 
-    public bool TryShow(Window windowPrefab)
+    private void ShowOrEnqueue(Window windowPrefab)
     {
-        if (IsFree(0) || windowPrefab.Tag == _activeWindowFirst.Tag)
+        if (_slotFirst.IsFree || windowPrefab.Tag == _slotFirst.Tag)
         {            
-            if (!IsFree(0))
+            if (!_slotFirst.IsFree)
             {
-                _activeWindowFirst.Hide(); 
+                _slotFirst.ActiveWindow.Hide(); 
             }
-            ShowWindow(windowPrefab, 0);
-
-            return true;
+            ShowWindow(windowPrefab, _slotFirst);
         }
         else
         {
-            if (IsFree(1) || windowPrefab.Tag == _activeWindowSecond.Tag)
+            if (_slotSecond.IsFree || windowPrefab.Tag == _slotSecond.Tag)
             {                
-                if (!IsFree(1))
+                if (!_slotSecond.IsFree)
                 {
-                    _activeWindowSecond.Hide();
+                    _slotSecond.ActiveWindow.Hide();
                 }
-                ShowWindow(windowPrefab, 1);
-
-                return true;
+                ShowWindow(windowPrefab, _slotSecond);                
             }
-            Debug.Log("Окно " + windowPrefab.name + " добавлено в очередь");
-            _queueWindowPrefabs.Enqueue(windowPrefab);
-            return false;
+            else
+            {
+                Debug.Log("Normal window " + windowPrefab.name + " was added to queue");
+                _queueWindowPrefabs.Enqueue(windowPrefab);
+            }
         }
     }
 
-    public void PressShowWindow(string id)
+    public void PressShowWindow(string id)//from Editor
     {
-        Window[] windowPrefabs = null;
+        Window[] windowPrefabs = GetWindowPrefabsById(id);
+        string key = id.Substring(1, 1);//TODO: Add values more than 9
+        Window windowPrefab = GetWindowPrefabByKey(key, windowPrefabs);
+        ShowOrEnqueue(windowPrefab);
+    }  
 
+    private Window[] GetWindowPrefabsById(string id)
+    { 
         if (id.Substring(0, 1) == "s")
         {
-            windowPrefabs = _windowPrefabsSettings;
+            return _windowPrefabsSettings;
         }
 
         if (id.Substring(0, 1) == "f")
         {
-            windowPrefabs = _windowPrefabsFriends;
+            return _windowPrefabsFriends;
         }
 
         if (id.Substring(0, 1) == "i")
         {
-            windowPrefabs = _windowPrefabsInvites;
+            return _windowPrefabsInvites;
         }
 
-        if (id.Substring(1, 1) == "0")
-        {
-            TryShow(windowPrefabs[0]);
-        }
+        Debug.LogWarning("Uncorrect ID: " + id);
+        return null;
+    }
 
-        if (id.Substring(1, 1) == "1")
-        {
-            TryShow(windowPrefabs[1]);
-        }
-
-        if (id.Substring(1, 1) == "2")
-        {
-            TryShow(windowPrefabs[2]);
-        }
-
-        if (id.Substring(1, 1) == "3")
-        {
-            TryShow(windowPrefabs[3]);
-        }
-    } 
-    
-
-    public void ShowWindow(Window windowPrefab, int positionId)
+    private Window GetWindowPrefabByKey(string key, Window[] windowPrefabs)
     {
-        Transform _initPositionTransform = positionId == 0 ? _slotFirstTransform : _slotSecondTransform;
+        if (key == "0")
+        {
+            return windowPrefabs[0];
+        }
 
-        Vector3 position = _initPositionTransform.position;//TODO!
-        Quaternion rotation = _initPositionTransform.rotation;
-        Transform parent = _initPositionTransform;
-        if (positionId == 0)
+        if (key == "1")
         {
-            _activeWindowFirst = Instantiate(windowPrefab, position, rotation, parent);
-            _activeWindowFirst.Init(this);
+            return windowPrefabs[1];
         }
-        if (positionId == 1)
+
+        if (key == "2")
         {
-            _activeWindowSecond = Instantiate(windowPrefab, position, rotation, parent);
-            _activeWindowSecond.Init(this);
+            return windowPrefabs[2];
         }
+
+        if (key == "3")
+        {
+            return windowPrefabs[3];
+        }
+
+        Debug.LogWarning("Uncorrect key: " + key);
+        return null;
     }
 }

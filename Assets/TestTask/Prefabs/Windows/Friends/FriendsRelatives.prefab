@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4784868548013178562}
   - component: {fileID: 8062794692529539785}
   m_Layer: 5
-  m_Name: Friends3
+  m_Name: FriendsRelatives
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

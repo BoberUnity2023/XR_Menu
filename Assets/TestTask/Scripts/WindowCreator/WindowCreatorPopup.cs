@@ -5,27 +5,25 @@ using UnityEngine;
 public class WindowCreatorPopup : WindowCreatorBase
 {    
     [SerializeField] private Transform _slotTransform;    
-    [SerializeField] protected Window[] _bonusWindowPrefabs;
-    private Queue<Window> _queueWindowPrefabs = new Queue<Window>();
-    private Window _activeWindow;
-
-    private int _id;
-    private const float _interval = 5;
-
-    public bool IsFree => _activeWindow == null;    
-
-    private void Start()
+    [SerializeField] protected Window[] _windowPrefabs;
+    private Queue<Window> _queueWindowPrefabs = new Queue<Window>();    
+    private Slot _slot;
+    private int _number;
+    private const float _interval = 5;     
+        
+    public void Init()
     {
+        _slot = new Slot(_slotTransform);
         StartCoroutine(Waitinterval(_interval));
-    }       
+    }
 
     public override void PressClose()
     {
-        _activeWindow.Hide();
+        _slot.ActiveWindow.Hide();
 
         if (_queueWindowPrefabs.Count > 0)
         {
-            Show(_queueWindowPrefabs.Dequeue());
+            ShowWindow(_queueWindowPrefabs.Dequeue(), _slot);
         }
     }
 
@@ -33,39 +31,24 @@ public class WindowCreatorPopup : WindowCreatorBase
     {
         yield return new WaitForSeconds(time);        
         
-        if (_id < _bonusWindowPrefabs.Length)
-        {
-            AddWindow(_id);            
-            _id++;
+        if (_number < _windowPrefabs.Length)
+        {            
+            ShowOrEnqueue(_windowPrefabs[_number]);
+            _number++;
             StartCoroutine(Waitinterval(_interval));
         }        
     }
 
-    private void AddWindow(int id)
+    private void ShowOrEnqueue(Window windowPrefab)
     {
-        TryShow(_bonusWindowPrefabs[id]);
-    }
-
-    public bool TryShow(Window windowPrefab)
-    {
-        if (IsFree)
+        if (_slot.IsFree)
         {
-            Show(windowPrefab);
-            return true;
+            ShowWindow(windowPrefab, _slot);            
         }
         else
         {
             _queueWindowPrefabs.Enqueue(windowPrefab);
-            return false;
+            Debug.Log("Popup window " + windowPrefab.name + " was added to queue");            
         }
-    }
-
-    public void Show(Window windowPrefab)
-    {
-        Vector3 position = _slotTransform.position;
-        Quaternion rotation = _slotTransform.rotation;
-        Transform parent = _slotTransform;
-        _activeWindow = Instantiate(windowPrefab, position, rotation, parent);
-        _activeWindow.Init(this);        
-    }    
+    }     
 }

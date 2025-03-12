@@ -12,7 +12,12 @@ public class CanvasMove : MonoBehaviour
     private const float _moveDistance = 1;
 
     private void Start()
-    {        
+    {
+        Init();
+    }
+
+    public void Init()
+    {
         _previousPosition = _gazeInteractorTransform.position;
         StartCoroutine(WaitInterval(_interval));
     }
