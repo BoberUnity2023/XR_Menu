@@ -437,21 +437,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edf84eab162c2d64c9623859af2e92ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _data: {fileID: 11400000, guid: 9c589821791120a4b8df6de6c10f8b65, type: 2}
   _slotFirstTransform: {fileID: 1886640747}
   _slotSecondTransform: {fileID: 1419935374}
-  _windowPrefabsSettings:
-  - {fileID: -4497739777885036752, guid: 9404aea8c05c77e4296149ce4ddf5b2a, type: 3}
-  - {fileID: -6531640931893848755, guid: 360a7743e29b03e46abc8b3c537b7d70, type: 3}
-  - {fileID: 3993753536887065764, guid: 1d10f65d158b4c04b9a4d2f3257a1998, type: 3}
-  - {fileID: -2928004192023376896, guid: bb56bdabea16e194ab0efc081267a035, type: 3}
-  _windowPrefabsFriends:
-  - {fileID: 6697034517337518546, guid: 38515f4db48c26444af7e49949b61199, type: 3}
-  - {fileID: 774084216567183002, guid: a0f874a1bc33ab647b18e8cefdf228d1, type: 3}
-  - {fileID: 8062794692529539785, guid: 8f171632cdccf4649a8e47fd3d0be80d, type: 3}
-  - {fileID: 6641995860019962508, guid: 7720f01d520abe047938a681c50d788e, type: 3}
-  _windowPrefabsInvites:
-  - {fileID: 6697034517337518546, guid: 63de7b95b307023488428f245439783c, type: 3}
-  - {fileID: 6697034517337518546, guid: 42c017a3cfdaba34d9c400c7f7c4b448, type: 3}
 --- !u!224 &306229187 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5289182684458692541, guid: e5db301629853dd4a99835fa70099d79, type: 3}
@@ -667,12 +655,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 630e7ffcce0cf1f4a8953b20a0e9c032, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _data: {fileID: 11400000, guid: a6ba83ffd359eb9438101b85091c8539, type: 2}
   _slotTransform: {fileID: 1876328857}
-  _windowPrefabs:
-  - {fileID: 2348612665628426194, guid: c5db70533fa98ca4ea20ebf69be27aaa, type: 3}
-  - {fileID: 2348612665628426194, guid: 1cf631c52c254bb4fb3d5fc1299a63c2, type: 3}
-  - {fileID: 2348612665628426194, guid: f6449977aa9a124419bbd96e1926089d, type: 3}
-  - {fileID: 2348612665628426194, guid: 895bbcc4fce6468479e7cf0f54a28406, type: 3}
 --- !u!4 &376042888 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8429981633443581382, guid: 6c8af5c8012f01440af6cb2bc3eb987c, type: 3}
@@ -1900,6 +1884,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a508207d11393b4e9bb784655a0f3fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _data: {fileID: 11400000, guid: 47cbc9023a32b2d40b8023053b85bca9, type: 2}
   _gazeInteractorTransform: {fileID: 1417731097}
   _canvasTransform: {fileID: 4865735190479670285}
 --- !u!1001 &1690704276

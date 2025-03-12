@@ -1,113 +1,136 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WindowCreatorNormal : WindowCreatorBase
+namespace XR_Menu
 {
-    [SerializeField] private Transform _slotFirstTransform;
-    [SerializeField] private Transform _slotSecondTransform;
-    [SerializeField] private Window[] _windowPrefabsSettings;
-    [SerializeField] private Window[] _windowPrefabsFriends;
-    [SerializeField] private Window[] _windowPrefabsInvites;
-    
-    private Queue<Window> _queueWindowPrefabs = new Queue<Window>();
-    private Slot _slotFirst;
-    private Slot _slotSecond;    
-
-    public void Init()
+    public class WindowCreatorNormal : WindowCreatorBase
     {
-        _slotFirst = new Slot(_slotFirstTransform);
-        _slotSecond = new Slot(_slotSecondTransform);
-    }
+        [SerializeField] private WindowCreatorNormalData _data;
+        [SerializeField] private Transform _slotFirstTransform;
+        [SerializeField] private Transform _slotSecondTransform;        
 
-    public void PressShowWindow(string id)//from Editor
-    {
-        Window[] windowPrefabs = GetWindowPrefabsById(id);
-        string key = id.Substring(1, 1);//TODO: Add values more than 9
-        Window windowPrefab = GetWindowPrefabByKey(key, windowPrefabs);
-        ShowOrEnqueue(windowPrefab);
-    }
+        private Queue<Window> _queueWindowPrefabs = new Queue<Window>();
+        private Slot _slotFirst;
+        private Slot _slotSecond;
 
-    public override void PressClose()
-    {
-        if (_queueWindowPrefabs.Count > 0)
+        public void Init()
         {
-            if (_slotFirst.IsFree || _slotSecond.IsFree)
-                ShowOrEnqueue(_queueWindowPrefabs.Dequeue());
+            _slotFirst = new Slot(_slotFirstTransform);
+            _slotSecond = new Slot(_slotSecondTransform);
         }
-    }
 
-    private void ShowOrEnqueue(Window windowPrefab)
-    {
-        if (_slotFirst.IsFree || windowPrefab.Tag == _slotFirst.Tag)
-        {            
-            if (!_slotFirst.IsFree)
+        public void PressShowWindow(string id)//from Editor
+        {
+            Window[] windowPrefabs = GetWindowPrefabsById(id);
+            string key = GetKeyFromId(id);
+            Window windowPrefab = GetWindowPrefabByKey(key, windowPrefabs);
+            ShowOrEnqueue(windowPrefab);
+        }
+
+        public override void PressClose()
+        {
+            if (_queueWindowPrefabs.Count > 0)
             {
-                _slotFirst.ActiveWindow.Hide(); 
+                if (_slotFirst.IsFree || _slotSecond.IsFree)
+                    ShowOrEnqueue(_queueWindowPrefabs.Dequeue());
             }
-            ShowWindow(windowPrefab, _slotFirst);
         }
-        else
+
+        private void ShowOrEnqueue(Window windowPrefab)
         {
-            if (_slotSecond.IsFree || windowPrefab.Tag == _slotSecond.Tag)
-            {                
-                if (!_slotSecond.IsFree)
+            bool success = TryShow(windowPrefab, _slotFirst);
+            if (success)
+            { 
+                return; 
+            }
+
+            success = TryShow(windowPrefab, _slotSecond);
+            if (success)
+            {
+                return;
+            }
+
+            TryEnquee(windowPrefab);
+        }
+
+        private bool TryShow(Window windowPrefab,  Slot slot)
+        {
+            if (slot.IsFree || windowPrefab.Tag == slot.Tag)
+            {
+                if (!slot.IsFree)
                 {
-                    _slotSecond.ActiveWindow.Hide();
+                    slot.ActiveWindow.Hide();
                 }
-                ShowWindow(windowPrefab, _slotSecond);                
+                ShowWindow(windowPrefab, slot);
+                return true;
             }
-            else
+
+            return false;
+        }
+
+        private bool TryEnquee(Window windowPrefab)
+        {
+            if (_queueWindowPrefabs.Contains(windowPrefab))
+            { 
+                return false; 
+            }
+            
+            Debug.Log("Normal window " + windowPrefab.name + " was added to queue");
+            _queueWindowPrefabs.Enqueue(windowPrefab);
+            return true;            
+        }
+
+        private Window[] GetWindowPrefabsById(string id)
+        {
+            if (id.Substring(0, 1) == "s")
             {
-                Debug.Log("Normal window " + windowPrefab.name + " was added to queue");
-                _queueWindowPrefabs.Enqueue(windowPrefab);
+                return _data.WindowPrefabsSettings;
             }
-        }
-    }
 
-    private Window[] GetWindowPrefabsById(string id)
-    { 
-        if (id.Substring(0, 1) == "s")
+            if (id.Substring(0, 1) == "f")
+            {
+                return _data.WindowPrefabsFriends;
+            }
+
+            if (id.Substring(0, 1) == "i")
+            {
+                return _data.WindowPrefabsInvites;
+            }
+
+            Debug.LogWarning("Uncorrect ID: " + id);
+            return null;
+        }
+
+        private Window GetWindowPrefabByKey(string key, Window[] windowPrefabs)
         {
-            return _windowPrefabsSettings;
+            if (key == "0")
+            {
+                return windowPrefabs[0];
+            }
+
+            if (key == "1")
+            {
+                return windowPrefabs[1];
+            }
+
+            if (key == "2")
+            {
+                return windowPrefabs[2];
+            }
+
+            if (key == "3")
+            {
+                return windowPrefabs[3];
+            }
+
+            Debug.LogWarning("Uncorrect key: " + key);
+            return null;
         }
 
-        if (id.Substring(0, 1) == "f")
+        private string GetKeyFromId(string id)
         {
-            return _windowPrefabsFriends;
+            return id.Substring(1, 1);//TODO: Add values more than 9
         }
-
-        if (id.Substring(0, 1) == "i")
-        {
-            return _windowPrefabsInvites;
-        }
-
-        Debug.LogWarning("Uncorrect ID: " + id);
-        return null;
-    }
-
-    private Window GetWindowPrefabByKey(string key, Window[] windowPrefabs)
-    {
-        if (key == "0")
-        {
-            return windowPrefabs[0];
-        }
-
-        if (key == "1")
-        {
-            return windowPrefabs[1];
-        }
-
-        if (key == "2")
-        {
-            return windowPrefabs[2];
-        }
-
-        if (key == "3")
-        {
-            return windowPrefabs[3];
-        }
-
-        Debug.LogWarning("Uncorrect key: " + key);
-        return null;
     }
 }
+

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dc9190248d28a040a14510bbd124fe6, type: 3}
+  m_Name: WindowCreatorPopup
+  m_EditorClassIdentifier: 
+  _windowPrefabs:
+  - {fileID: 2348612665628426194, guid: c5db70533fa98ca4ea20ebf69be27aaa, type: 3}
+  - {fileID: 2348612665628426194, guid: 1cf631c52c254bb4fb3d5fc1299a63c2, type: 3}
+  - {fileID: 2348612665628426194, guid: f6449977aa9a124419bbd96e1926089d, type: 3}
+  - {fileID: 2348612665628426194, guid: 895bbcc4fce6468479e7cf0f54a28406, type: 3}
+  - {fileID: 2348612665628426194, guid: e18937ccee50b174a8ac625883806f3e, type: 3}
+  - {fileID: 2348612665628426194, guid: b6d7f6c95f32e494ebfb8b3b517793f5, type: 3}
+  _interval: 5

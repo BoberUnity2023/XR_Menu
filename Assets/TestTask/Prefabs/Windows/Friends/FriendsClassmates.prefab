@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a73d2e0d1e4a0af4eac5c3872e431b3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _data: {fileID: 11400000, guid: 5df70dcf56fb3384599a458eb4acd253, type: 2}
   _tag: 1
   _takeButton: {fileID: 5487552389575950396}
 --- !u!1 &5790471585921252504

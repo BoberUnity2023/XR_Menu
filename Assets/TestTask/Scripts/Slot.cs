@@ -1,31 +1,35 @@
 using UnityEngine;
 
-public class Slot
+namespace XR_Menu
 {
-    private Transform _slotTransform;
-
-    public Transform Transform => _slotTransform;
-
-    public Window ActiveWindow { get; set; }
-
-    public WindowTag Tag => ActiveWindow.Tag;
-
-    public Slot(Transform slotTransform)
+    public class Slot
     {
-        _slotTransform = slotTransform;        
-    }    
+        private Transform _slotTransform;
 
-    public bool IsFree
-    {
-        get
+        public Transform Transform => _slotTransform;
+
+        public Window ActiveWindow { get; set; }
+
+        public WindowTag Tag => ActiveWindow.Tag;
+
+        public Slot(Transform slotTransform)
         {
-            if (ActiveWindow == null)
-                return true;
+            _slotTransform = slotTransform;
+        }
 
-            if (ActiveWindow.IsHidden)
-                return true;
+        public bool IsFree
+        {
+            get
+            {
+                if (ActiveWindow == null)
+                    return true;
 
-            return false;
-        }        
+                if (ActiveWindow.IsHidden)
+                    return true;
+
+                return false;
+            }
+        }
     }
 }
+
